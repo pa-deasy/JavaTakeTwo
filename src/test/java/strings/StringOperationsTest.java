@@ -60,4 +60,28 @@ public class StringOperationsTest {
 
         assertArrayEquals(expected, actual);
     }
+
+    @Test
+    public void GivenStringWhenCheckedForMatchingRotationThenReturnsExpectedBoolean() {
+        assertEquals(false, StringOperations.matchingRotations("abcc", "cbac"));
+        assertEquals(false, StringOperations.matchingRotations("abcdef", "zb"));
+        assertEquals(false, StringOperations.matchingRotations("abc", "ab"));
+        assertEquals(true, StringOperations.matchingRotations("HELLO", "LOHEL"));
+    }
+
+    @Test
+    public void GivenProductsWhenSearchWordProvidedThenReturnsExpectedSuggestions() {
+        String[] products = {"mobile", "mouse", "moneypot", "monitor", "mousepad", "zebra"};
+        String[][] expected = {
+            {"mobile", "moneypot", "monitor"}, 
+            {"mobile", "moneypot", "monitor"},
+            {"mouse", "mousepad"},
+            {"mouse", "mousepad"},
+            {"mouse", "mousepad"}
+        };
+
+        String[][] actual = StringOperations.suggestProducts(products, "mouse");
+
+        assertArrayEquals(expected, actual);
+    }
 }

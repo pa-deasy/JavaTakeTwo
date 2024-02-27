@@ -1,6 +1,7 @@
 package strings;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Set;
 
 public class StringOperations {
@@ -75,5 +76,51 @@ public class StringOperations {
             String newPrefix = prefix + remaining.substring(index, index + 1);
             permutationsOf(newRemaining, newPrefix, permutations);
         }
+    }
+
+    public static boolean matchingRotations(String first, String second) {
+        if (first.length() != second.length()) {
+            return false;
+        }
+
+        String doubledFirst = first + first;
+        return doubledFirst.contains(second);
+    }
+
+    // # You are given an array of strings products and string search_word.
+    // # Design a system that suggests at most 3 product names for products are each character of search_word is typed.
+    // # Suggested products should have common prefix with search_word.
+    // # If there are more than three products with a common prefix return the three lexicographically minimum products.
+    public static String[][] suggestProducts(String[] products, String searchWord) {
+        Arrays.sort(products);
+        ArrayList<String[]> suggestions = new ArrayList<String[]>();
+        int leftIndex = 0;
+        int rightIndex = products.length - 1;
+
+        for (int searchIndex = 0; searchIndex < searchWord.length(); searchIndex++) {
+            while (leftIndex <= rightIndex && doesNotMatch(products[leftIndex], searchWord, searchIndex)) {
+                leftIndex++;
+            }
+            while (leftIndex <= rightIndex && doesNotMatch(products[rightIndex], searchWord, searchIndex)) {
+                rightIndex--;
+            }
+
+            int wordsLeft = rightIndex - leftIndex + 1;
+            if (wordsLeft > 3) {
+                suggestions.add(Arrays.copyOfRange(products, leftIndex, leftIndex + 3));
+            }
+            else if (wordsLeft > 0)  {
+                suggestions.add(Arrays.copyOfRange(products, leftIndex, rightIndex + 1));
+            }
+            else {
+                suggestions.add(new String[0]);
+            }
+        }
+
+        return suggestions.toArray(new String[suggestions.size()][suggestions.size()]);
+    }
+
+    private static boolean doesNotMatch(String product, String searchWord, int searchIndex) {
+        return product.length() - 1 < searchIndex || product.charAt(searchIndex) != searchWord.charAt(searchIndex);
     }
 }
