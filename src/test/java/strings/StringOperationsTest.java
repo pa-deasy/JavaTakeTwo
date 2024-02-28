@@ -84,4 +84,59 @@ public class StringOperationsTest {
 
         assertArrayEquals(expected, actual);
     }
+
+    @Test
+    public void GivenLogsWhenOrderedThenMatchesExpectedOrder() {
+        String[] logs = {"dig1 8 1 5 1", "let1 art can", "dig2 3 6", "let2 own kit dig", "let3 art zero"};
+        String[] expected = {"let1 art can", "let3 art zero", "let2 own kit dig", "dig1 8 1 5 1", "dig2 3 6"};
+
+        String[] actual = StringOperations.reorderLogs(logs);
+        
+        assertArrayEquals(expected, actual);
+    }
+    
+    @Test
+    public void GivenTwoWordsInSentenceWhenMinimumDistanceCalculatedThenExpectedDistanceReturned() {
+        String sentence = "geeks for geeks contribute practice";
+        String firstWord = "geeks";
+        String secondWord = "practice";
+
+        int distance = StringOperations.minimumDistanceBetween(sentence, firstWord, secondWord);
+
+        assertEquals(1, distance);
+    }
+
+    @Test
+    public void GivenArrayOfStringsWhenPathExistsFromStartToTargetThenReturnsLadderDistance() {
+        String[] elements = {"POON", "PLEE", "SAME", "POIE", "PLEA", "PLIE", "POIN"};
+        HashSet<String> dictionary = new HashSet<String>(Arrays.asList(elements));
+
+        int ladder = StringOperations.wordLadder(dictionary, "TOON", "PLEA");
+
+        assertEquals(7, ladder);
+    }
+
+    @Test
+    public void GivenAnotherArrayOfStringsWhenPathExistsFromStartToTargetThenReturnsLadderDistance() {
+        String[] elements = {"ABCD", "EBAD", "EBCD", "XYZA"};
+        HashSet<String> dictionary = new HashSet<String>(Arrays.asList(elements));
+
+        int ladder = StringOperations.wordLadder(dictionary, "ABCV", "EBAD");
+
+        assertEquals(4, ladder);
+    }
 }
+
+
+
+// @pytest.mark.parametrize(
+//     'dictionary,start,target,expected',
+//     [
+//         pytest.param({'POON', 'PLEE', 'SAME', 'POIE', 'PLEA', 'PLIE', 'POIN'}, 'TOON', 'PLEA', 7),
+//         pytest.param({'ABCD', 'EBAD', 'EBCD', 'XYZA'}, 'ABCV', 'EBAD', 4)
+//     ]
+// )
+// def test_word_ladder_when_path_possible_returns_correct_step_count(dictionary, start, target, expected):
+//     actual = word_ladder(dictionary, start, target)
+    
+//     assert actual == expected

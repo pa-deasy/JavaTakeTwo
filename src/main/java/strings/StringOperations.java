@@ -2,7 +2,12 @@ package strings;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class StringOperations {
     public static String reverseSentence(String sentence) {
@@ -122,5 +127,116 @@ public class StringOperations {
 
     private static boolean doesNotMatch(String product, String searchWord, int searchIndex) {
         return product.length() - 1 < searchIndex || product.charAt(searchIndex) != searchWord.charAt(searchIndex);
+    }
+
+    // # You are given an array of logs. Each log is space-delimited string of words, where the first word is the identifier. There are two types of logs:
+    // # - Letter-logs: All words except the identifier consist of lowercase english letters.
+    // # - Digit-logs: All words except the identifier consist of digits.
+    // # Reorder these logs so that:
+    // # 1. The letter-logs come before all digit-logs.
+    // # 2. The letter-logs are sorted lexographically by their contents. If their contents are the same, then sort them lexographically by their identifiers.
+    // # 3. The digit-logs maintain their relative ordering.
+    public static String[] reorderLogs(String[] logs) {
+        ArrayList<String> letterLogs = new ArrayList<String>();
+        ArrayList<String> digitLogs = new ArrayList<String>();
+
+        for (String log: logs) {
+            if (containsDigit(log)) {
+                digitLogs.add(log);
+            }
+            else {
+                letterLogs.add(log);
+            }
+        }
+
+        String[] letterLogsArray = letterLogs.toArray(new String[letterLogs.size()]);
+        String[] digitLogsArray = digitLogs.toArray(new String[digitLogs.size()]);
+
+        Arrays.sort(letterLogsArray, new Comparator<String>() {
+            public int compare(String first, String second) {
+                int firstSpace = first.indexOf(" ");
+                int secondSpace = second.indexOf(" ");
+                first = first.substring(firstSpace);
+                second = second.substring(secondSpace);
+
+                return first.compareTo(second);
+            }
+        });
+
+        return Stream.concat(Arrays.stream(letterLogsArray), Arrays.stream(digitLogsArray)).toArray(String[]::new);
+    }
+
+    private static boolean containsDigit(String log) {
+        char lastChar = log.charAt(log.length() - 1);
+        return Character.isDigit(lastChar);
+    }
+    
+    public static int minimumDistanceBetween(String sentence, String firstWord, String secondWord) {
+        String[] words = sentence.split(" ");
+        int firstIndex = -1;
+        int secondIndex = -1;
+        int minimumDistance = -1;
+
+        for (int index = 0; index < words.length; index++) {
+            String word = words[index];
+            if (word.equals(firstWord)) {
+                firstIndex = index;
+                minimumDistance = setMinimumDistance(firstIndex, secondIndex, minimumDistance);
+            }
+            else if (word.equals(secondWord)) {
+                secondIndex = index;
+                minimumDistance = setMinimumDistance(firstIndex, secondIndex, minimumDistance);
+            }
+        }
+
+        return minimumDistance;
+    }
+
+    private static int setMinimumDistance(int firstIndex, int secondIndex, int minimumDistance) {
+        if (firstIndex == -1 || secondIndex == -1) { return minimumDistance; }
+
+        int distance = Math.abs(firstIndex - secondIndex) - 1;
+        return minimumDistance > -1 ? Math.min(minimumDistance, distance) : distance;
+    }
+
+    public static int wordLadder(HashSet<String> dictionary, String start, String target) {
+        int ladder = 0;
+        Queue<String> queue = new PriorityQueue<String>();
+        queue.add(start);
+
+        while (queue.size() > 0) {
+            String current = queue.remove();
+            ladder++;
+
+            if (current.equals(target)) {
+                return ladder;
+            }
+            
+            for (String element: dictionary) {
+                if (moreThanOneDiff(element, current)) {
+                    continue;
+                }
+                else {
+                    queue.add(element);
+                    dictionary.remove(element);
+                    break;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    private static boolean moreThanOneDiff(String first, String second) {
+        if (first.length() != second.length()) {return false; }
+
+        int diffs = 0;
+        for (int index = 0; index < first.length(); index++) {
+            if (first.charAt(index) != second.charAt(index)) { diffs++ ;}
+
+            if (diffs > 1) { return true; }
+        }
+
+        return false;
     }
 }
