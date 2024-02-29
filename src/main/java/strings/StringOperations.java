@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.PriorityQueue;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -201,11 +201,11 @@ public class StringOperations {
 
     public static int wordLadder(HashSet<String> dictionary, String start, String target) {
         int ladder = 0;
-        Queue<String> queue = new PriorityQueue<String>();
-        queue.add(start);
+        Queue<String> queue = new LinkedList<String>();
+        queue.offer(start);
 
         while (queue.size() > 0) {
-            String current = queue.remove();
+            String current = queue.poll();
             ladder++;
 
             if (current.equals(target)) {
@@ -217,7 +217,7 @@ public class StringOperations {
                     continue;
                 }
                 else {
-                    queue.add(element);
+                    queue.offer(element);
                     dictionary.remove(element);
                     break;
                 }
