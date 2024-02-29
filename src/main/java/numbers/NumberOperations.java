@@ -1,5 +1,6 @@
 package numbers;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.PriorityQueue;
 
@@ -77,5 +78,21 @@ public class NumberOperations {
         }
 
         return heap.stream().mapToInt(x->x).toArray();
+    }
+
+    // # Suppose there are n bags containing different amounts of chocolates and there is a wizard and a kid. At every second the kid eats all chocolates from the bag containing maximum number
+    // # of chocolates and the wizard refills it with half the chocolates it was containing earlier. Find how many chocolates the kid has eaten at t seconds.
+    public static int calculateChocolatesEaten(Integer[] chocolates, int t) {
+        PriorityQueue<Integer> heap = new PriorityQueue<Integer>(Collections.reverseOrder());
+        heap.addAll(Arrays.asList(chocolates));
+
+        int eaten = 0;
+        for (int time = 0; time < t; time++) {
+            int most = heap.poll();
+            eaten += most;
+            heap.add(most / 2);
+        }
+
+        return eaten;
     }
 }

@@ -36,4 +36,13 @@ public class NumberOperationsTest {
 
         assertArrayEquals(expected, actual);
     }
+
+    @Test
+    public void GivenBagsOfChocolatesWhenTimeTIsReachedThenTheExpectedNumberOfChocolatesHaveBeenEaten() {
+        Integer[] chocolates = {18, 12, 60};
+
+        int eaten = NumberOperations.calculateChocolatesEaten(chocolates, 5);
+
+        assertEquals(135, eaten);
+    }
 }
