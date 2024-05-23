@@ -10,6 +10,12 @@ public class Example {
         return employees;
     }
 
+    public static Employee[] giveRaisesParallel(Employee[] employees, int raise) {
+        Arrays.stream(employees).parallel().forEach(e -> e.IncreaseSalaryBy(raise));
+
+        return employees;
+    }
+
     public static List<Optional<Employee>> findEmployees(Integer[] ids) {
         EmployeeRepository employeeRepository = new EmployeeRepository();
         return Stream.of(ids).map(employeeRepository::findById).collect(Collectors.toList());
@@ -40,6 +46,10 @@ public class Example {
         return Arrays.stream(employees).max(Comparator.comparing(Employee::getSalary)).orElseThrow(NoSuchElementException::new);
     }
 
+    public static int getLatestEmployeeId(Employee[] employees) {
+        return Arrays.stream(employees).mapToInt(Employee::getId).max().orElseThrow(NoSuchElementException::new);
+    }
+
     public static int[] removeDuplicates(int[] numbers) {
         return Arrays.stream(numbers).distinct().toArray();
     }
@@ -51,4 +61,18 @@ public class Example {
     public static boolean checkForName(Employee[] employees, String name) {
         return Arrays.stream(employees).anyMatch(e -> (e.getName().split(" ")[0]).equals(name));
     }
+
+    public static int reduceSalaries(Employee[] employees) {
+        return Arrays.stream(employees).map(Employee::getSalary).reduce(0, Integer::sum);
+    }
+
+    public static String printNames(Employee[] employees) {
+        return Arrays.stream(employees).map(Employee::getName).collect(Collectors.joining(", "));
+    }
+
+    public static Map<Boolean, List<Employee>> splitEmployeesBySalary(Employee[] employees, int salary) {
+        return Arrays.stream(employees).collect(Collectors.partitioningBy(e -> e.getSalary() >= salary));
+    }
+
+
 }

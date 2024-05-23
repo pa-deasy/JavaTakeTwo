@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -19,6 +20,15 @@ public class ExampleTest {
     @Test
     public void GivenEmployeesWhenRaisesReceivedThenSalariesAsExpected() {
         Employee[] richerEmployees = Example.giveRaises(employees, 100);
+
+        assertEquals(100100, richerEmployees[0].getSalary());
+        assertEquals(200100, richerEmployees[1].getSalary());
+        assertEquals(300100, richerEmployees[2].getSalary());
+    }
+
+    @Test
+    public void GivenEmployeesWhenRaisesReceivedInParallelThenSalariesAsExpected() {
+        Employee[] richerEmployees = Example.giveRaisesParallel(employees, 100);
 
         assertEquals(100100, richerEmployees[0].getSalary());
         assertEquals(200100, richerEmployees[1].getSalary());
@@ -89,6 +99,13 @@ public class ExampleTest {
     }
 
     @Test
+    public void GivenEmployeesWhenLatestSoughtThenMaxReturned() {
+        int latest = Example.getLatestEmployeeId(employees);
+
+        assertEquals(3, latest);
+    }
+
+    @Test
     public void GivenNumbersWhenDuplicatedRemovedThenOutputIsUnique() {
         int[] numbers = { 1, 3, 5, 1, 7, 1, 3};
         int[] expected = {1, 3, 5, 7};
@@ -110,5 +127,27 @@ public class ExampleTest {
         boolean hasBill = Example.checkForName(employees, "Bill");
 
         assertTrue(hasBill);
+    }
+
+    @Test
+    public void GivenEmployeesWhenSalariesReducedThenMatchesSum() {
+        int sum = Example.reduceSalaries(employees);
+
+        assertEquals(600000, sum);
+    }
+
+    @Test
+    public void GivenEmployeesWhenNamesPrintedThenMatchesJoin() {
+        String printed = Example.printNames(employees);
+
+        assertEquals("Jeff Bezos, Bill Gates, Mark Zuckerberg", printed);
+    }
+
+    @Test
+    public void GivenEmployeesWhenPartitionedBySalaryThenSplitCorrectly() {
+        Map<Boolean, List<Employee>> partitioned = Example.splitEmployeesBySalary(employees, 200000);
+
+        assertEquals(2, partitioned.get(true).size());
+        assertEquals(1, partitioned.get(false).size());
     }
 }
