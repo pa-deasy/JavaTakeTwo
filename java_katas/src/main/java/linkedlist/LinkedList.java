@@ -1,10 +1,19 @@
 package linkedlist;
 
 import lombok.Data;
-import lombok.NonNull;
 
 @Data
 public class LinkedList {
-    @NonNull private Node head;
-    @NonNull private Node tail;
+    private Node head;
+    private Node tail;
+
+    public LinkedList() {
+        this.head = null;
+        this.tail = null;
+    }
+
+    public LinkedList(Node head, Node tail) {
+        this.head = head;
+        this.tail = tail;
+    }
 }
